@@ -1,0 +1,33 @@
+:root{--primary:#0ea5e9;--secondary:#10b981;--dark:#0f172a;--light:#f8fafc}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;background:var(--light);color:#0f172a}
+.navbar{box-shadow:0 2px 12px rgba(15,23,42,.06)}
+.hero{background:linear-gradient(135deg,rgba(14,165,233,.1),rgba(16,185,129,.1));padding:4rem 1rem;border-radius:1rem}
+.card{border:none;box-shadow:0 8px 20px rgba(15,23,42,.06);transition:transform .2s ease, box-shadow .2s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(15,23,42,.12)}
+.badge-cal{background:rgba(14,165,233,.15);color:#0369a1}
+.fab{position:fixed;right:24px;bottom:24px;background:var(--primary);color:#fff;border:none;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(14,165,233,.4);cursor:pointer;z-index:1050}
+.chatbox{position:fixed;right:24px;bottom:90px;width:320px;max-height:60vh;background:#fff;border-radius:12px;box-shadow:0 20px 48px rgba(15,23,42,.2);display:none;flex-direction:column;overflow:hidden;z-index:1050}
+.chatbox-header{padding:.75rem 1rem;background:var(--primary);color:#fff}
+.chatbox-body{padding:1rem;overflow:auto;gap:.5rem;display:flex;flex-direction:column}
+.chat-msg{padding:.5rem .75rem;border-radius:10px;max-width:80%}
+.chat-msg.user{background:#e2f2ff;align-self:flex-end}
+.chat-msg.bot{background:#f1f5f9;align-self:flex-start}
+.chatbox-footer{display:flex;gap:.5rem;padding:.75rem;border-top:1px solid #e2e8f0}
+
+/* Chatbot typing indicator */
+.chat-msg.bot.typing{display:flex;gap:6px;align-items:center;background:#f1f5f9}
+.chat-msg.bot.typing .dot{width:6px;height:6px;background:#94a3b8;border-radius:50%;display:inline-block;animation:blink 1.3s infinite ease-in-out}
+.chat-msg.bot.typing .dot:nth-child(2){animation-delay:.15s}
+.chat-msg.bot.typing .dot:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+/* Recipe cards inside chat */
+.recipe-list{display:grid;grid-template-columns:1fr;gap:.75rem;width:100%}
+@media(min-width:420px){.recipe-list{grid-template-columns:1fr 1fr}}
+.recipe-card{display:flex;gap:.75rem;background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.recipe-card img{width:92px;height:92px;object-fit:cover}
+.recipe-card .rc-body{padding:.5rem .75rem}
+.recipe-card .rc-title{font-weight:600;margin-bottom:.25rem;color:#0f172a}
+.recipe-card .rc-ings{margin:0;padding-left:1rem;color:#334155}
+.recipe-card .rc-actions{margin-top:.5rem}
+.recipe-card .rc-actions a{background:#0ea5e9;color:#fff;padding:.25rem .5rem;border-radius:6px;text-decoration:none;font-size:.85rem}

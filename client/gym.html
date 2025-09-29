@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cooking Mates - Gym Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #0f0f10; color: #fff; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #111;
+      position: sticky; /* keep on top like other pages */
+      top: 0;
+      z-index: 2001;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #444;
+    }
+    .logo { font-size: 26px; font-weight: bold; color: #ff9800; }
+    .menu { display: flex; gap: 25px; }
+    .menu a { text-decoration: none; color: white; font-weight: 500; transition: 0.3s; }
+    .menu a:hover { color: #ff9800; }
+    .menu-icon { display: none; font-size: 28px; color: white; cursor: pointer; background: none; border: none; -webkit-tap-highlight-color: transparent; z-index:2002; pointer-events:auto; }
+    .menu-icon:focus, .menu-icon:active { background: transparent !important; outline: none !important; box-shadow: none !important; color:#fff !important; }
+    .menu-icon i { pointer-events: none; }
+
+    /* ===== Container ===== */
+    .container { flex: 1; max-width: 1200px; margin: 34px auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+
+    /* Stats header */
+    .stats { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:14px; }
+    .stat { background:#1b1f24; border:1px solid #333; border-radius:12px; padding:16px; box-shadow:0 6px 18px rgba(0,0,0,.35); text-align:center; }
+    .stat h4 { margin:0 0 6px; color:#ff9800; font-weight:700; }
+    .stat p { margin:0; font-size:20px; font-weight:800; }
+
+    /* ===== Section Cards ===== */
+    .card { background: #1b1f24; border-radius: 14px; padding: 20px; box-shadow: 0 6px 16px rgba(0,0,0,.4); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #30343a; max-width: 900px; margin: 0 auto; }
+    .card:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.45); border-color:#3a3f45; }
+    .card h2 { color: #ff9800; margin-bottom: 12px; text-align: center; font-weight: 800; letter-spacing:.2px; }
+    .card-inner { background: #14181c; color: #fff; border-radius: 10px; padding: 16px; box-shadow: inset 0 0 0 1px #20242a; border:1px solid #20242a; }
+
+    /* ===== Gym Form (Improved UI) ===== */
+    #workoutForm { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; padding: 8px 0; }
+    #workoutForm label {
+      font-weight: 600;
+      color: #ff9800;
+      margin-bottom: 6px;
+      display: block;
+    }
+    #workoutForm input,
+    #workoutForm select,
+    #workoutForm textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #2c3137; background: #0f1216; color: #e9ecef; font-size: 15px; transition: 0.2s; }
+    #workoutForm select { appearance: none; -moz-appearance: none; -webkit-appearance: none; background-image: linear-gradient(45deg, transparent 50%, #ff9800 50%), linear-gradient(135deg, #ff9800 50%, transparent 50%); background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px); background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+    #workoutForm input:focus,
+    #workoutForm select:focus,
+    #workoutForm textarea:focus { border-color: #ff9800; box-shadow: 0 0 0 2px rgba(255,152,0,0.18); outline: none; }
+    #workoutForm textarea {
+      grid-column: span 2;
+      min-height: 90px;
+      resize: vertical;
+    }
+    .form-actions { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-actions button { padding: 12px 16px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; background: #ff9800; color: #0d0f12; transition: transform .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(255,152,0,.2); }
+    .form-actions button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(255,152,0,.28); }
+
+    /* ===== Diet Form ===== */
+    .diet-form { display:grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+    .diet-form > button { grid-column: 1 / -1; }
+
+    /* ===== Tables ===== */
+    .table-wrapper { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; }
+    th, td { border: 1px solid #2b2f36; padding: 10px; text-align: center; }
+    th { background: #ff9800; color: white; font-size: 14px; text-transform: uppercase; }
+    td { background: #1b1b1d; font-size: 14px; }
+    td button { margin: 2px 0; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    td button.edit { background: #3498db; margin-right: 5px; }
+    td button.delete { background: #e74c3c; }
+
+    /* ===== Enhanced Responsive Design ===== */
+    
+    /* Large tablets and small desktops */
+    @media (max-width: 1200px) {
+      .container { max-width: 100%; padding: 20px; }
+      .stats { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    }
+    
+    /* Tablets */
+    @media (max-width: 992px) {
+      .container { padding: 16px; }
+      .navbar { padding: 16px 24px; }
+      .stats { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+      .stat { padding: 14px; }
+      .stat h4 { font-size: 14px; }
+      .stat p { font-size: 18px; }
+      #workoutForm { grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+      .card { padding: 18px; }
+    }
+    
+    /* Mobile landscape and small tablets */
+    @media (max-width: 768px) {
+      .navbar { 
+        padding: 12px 20px; 
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .logo { font-size: 22px; }
+      .menu { 
+        display: none; 
+        flex-direction: column; 
+        background-color: #222; 
+        position: absolute; 
+        top: 70px; 
+        right: 20px; 
+        padding: 16px; 
+        border-radius: 12px; 
+        width: 200px; 
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      }
+      .menu.show { display: flex; }
+      .menu-icon { display: block; }
+      .menu a { 
+        padding: 8px 0; 
+        border-bottom: 1px solid #333;
+        text-align: center;
+      }
+      .menu a:last-child { border-bottom: none; }
+      
+      .container { padding: 12px; margin-top: 20px; }
+      .stats { 
+        grid-template-columns: 1fr; 
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .stat { padding: 12px; }
+      
+      #workoutForm { 
+        grid-template-columns: 1fr; 
+        gap: 12px;
+      }
+      #workoutForm textarea { grid-column: auto; }
+      .form-actions { 
+        grid-template-columns: 1fr; 
+        gap: 10px;
+      }
+      
+      .card { 
+        max-width: 100%; 
+        border-radius: 12px; 
+        padding: 16px; 
+        margin-bottom: 16px;
+      }
+      .card h2 { font-size: 20px; margin-bottom: 16px; }
+      .card-inner { padding: 14px; }
+      
+      /* Enhanced table responsiveness */
+      .table-wrapper { 
+        overflow-x: auto; 
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+      }
+      table { 
+        min-width: 600px; 
+        font-size: 14px;
+      }
+      th, td { 
+        padding: 8px 6px; 
+        font-size: 13px;
+      }
+      th { font-size: 12px; }
+      
+      /* Stack table rows on very small screens */
+      @media (max-width: 600px) {
+        table, thead, tbody, th, td, tr { 
+          display: block; 
+          width: 100%; 
+        }
+        thead { display: none; }
+        tr { 
+          margin-bottom: 12px; 
+          border: 1px solid #2b2f36; 
+          border-radius: 10px; 
+          padding: 12px; 
+          background: #1a1d21;
+        }
+        td { 
+          text-align: right; 
+          padding-left: 50%; 
+          position: relative; 
+          border: none;
+          padding-top: 6px;
+          padding-bottom: 6px;
+        }
+        td::before { 
+          content: attr(data-label); 
+          position: absolute; 
+          left: 12px; 
+          top: 6px; 
+          font-weight: bold; 
+          color: #ff9800; 
+          text-align: left; 
+          font-size: 12px;
+        }
+        td button { 
+          margin: 4px 2px; 
+          padding: 6px 8px; 
+          font-size: 12px;
+        }
+      }
+    }
+    
+    /* Mobile portrait */
+    @media (max-width: 480px) {
+      .navbar { 
+        padding: 10px 16px; 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center;
+      }
+      .menu { 
+        top: 60px; 
+        right: 16px;
+        width: 180px; 
+        padding: 12px;
+      }
+      .logo { font-size: 20px; }
+      
+      .container { 
+        padding: 8px; 
+        margin-top: 16px;
+      }
+      .stats { gap: 8px; }
+      .stat { 
+        padding: 10px; 
+        border-radius: 10px;
+      }
+      .stat h4 { font-size: 13px; margin-bottom: 4px; }
+      .stat p { font-size: 16px; }
+      
+      .card { 
+        padding: 12px; 
+        border-radius: 10px;
+      }
+      .card h2 { 
+        font-size: 18px; 
+        margin-bottom: 12px;
+      }
+      .card-inner { 
+        padding: 10px; 
+        border-radius: 8px;
+      }
+      
+      #workoutForm { gap: 10px; }
+      #workoutForm label { 
+        font-size: 14px; 
+        margin-bottom: 4px;
+      }
+      input, button, select, textarea { 
+        font-size: 14px; 
+        padding: 10px; 
+        border-radius: 6px;
+      }
+      textarea { min-height: 80px; }
+      
+      .form-actions button { 
+        padding: 10px 12px; 
+        font-size: 14px;
+      }
+      
+      td::before { font-size: 12px; }
+    }
+    
+    /* Very small screens */
+    @media (max-width: 360px) {
+      .navbar { padding: 8px 12px; }
+      .logo { font-size: 18px; }
+      .menu { 
+        width: 160px; 
+        right: 12px;
+      }
+      .container { padding: 6px; }
+      .card { padding: 10px; }
+      .card-inner { padding: 8px; }
+      .stat { padding: 8px; }
+      .stat h4 { font-size: 12px; }
+      .stat p { font-size: 14px; }
+      input, button, select, textarea { 
+        font-size: 13px; 
+        padding: 8px;
+      }
+    }
+    
+    /* Landscape orientation adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .container { margin-top: 16px; }
+      .stats { margin-bottom: 16px; }
+      .card { margin-bottom: 12px; }
+    }
+
+    /* Gym-only: re-enable mobile hamburger (overrides global non-responsive rules) */
+    @media (max-width: 768px) {
+      .navbar .menu {
+        display: none !important;
+        position: absolute !important;
+        top: 70px; right: 20px;
+        background: #222 !important;
+        border: 1px solid #333 !important;
+        width: 220px !important;
+        padding: 12px !important;
+        border-radius: 12px;
+        flex-direction: column;
+        box-shadow: 0 12px 28px rgba(0,0,0,.35);
+        z-index: 1000;
+      }
+      .navbar .menu.show { display: flex !important; }
+      .navbar .menu-icon { display: inline-block !important; }
+      .navbar .menu a { padding: 10px 8px; border-bottom: 1px solid #333; text-align: left; }
+      .navbar .menu a:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Cooking Mates</div>
+    <button class="menu-icon" id="menuToggle" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
+    <div class="menu" id="navLinks">
+      <a href="/client/index.html">Home</a>
+      <a href="/client/recipes.html">Recipes</a>
+      <a href="/client/calories.html">Calorie Tracker</a>
+      <a href="/client/gym.html" class="active">Gym Tracker</a>
+      <a href="/login">Login</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section class="stats" id="statsBar">
+      <div class="stat"><h4>Total Workouts</h4><p id="statWorkouts">0</p></div>
+      <div class="stat"><h4>Total Minutes</h4><p id="statMinutes">0</p></div>
+      <div class="stat"><h4>Total Calories Burned</h4><p id="statBurned">0</p></div>
+    </section>
+
+    <!-- Workout Card -->
+    <div class="card">
+      <h2>Add Workout</h2>
+      <div class="card-inner">
+        <form id="workoutForm">
+          <div>
+            <label for="exercise">Exercise Name *</label>
+            <input type="text" id="exercise" placeholder="e.g., Push Ups" required>
+          </div>
+          <div>
+            <label for="duration">Duration (minutes) *</label>
+            <input type="number" id="duration" placeholder="e.g., 30" min="1" required>
+          </div>
+          <div>
+            <label for="caloriesBurned">Calories Burned</label>
+            <input type="number" id="caloriesBurned" placeholder="e.g., 300" min="0">
+          </div>
+          <div>
+            <label for="exerciseType">Exercise Type</label>
+            <select id="exerciseType">
+              <option value="other">Other</option>
+              <option value="cardio">Cardio</option>
+              <option value="strength">Strength Training</option>
+              <option value="flexibility">Flexibility</option>
+              <option value="sports">Sports</option>
+            </select>
+          </div>
+          <div>
+            <label for="sets">Sets</label>
+            <input type="number" id="sets" placeholder="e.g., 3" min="0">
+          </div>
+          <div>
+            <label for="reps">Reps</label>
+            <input type="number" id="reps" placeholder="e.g., 12" min="0">
+          </div>
+          <div>
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g., 50" min="0" step="0.1">
+          </div>
+          <div>
+            <label for="distance">Distance (km)</label>
+            <input type="number" id="distance" placeholder="e.g., 5" min="0" step="0.1">
+          </div>
+          <div style="grid-column: span 2;">
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Any additional notes about your workout..."></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit">Add Workout</button>
+            <button type="reset">Clear Form</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card-inner" style="margin-top:12px;">
+        <label for="dateFilter">Filter by Date</label>
+        <input type="date" id="dateFilter">
+      </div>
+
+      <div class="card-inner" style="margin-top:12px;">
+        <div id="workoutTable" class="table-wrapper" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Diet Card -->
+    <div class="card">
+      <h2>Add Diet</h2>
+      <div class="card-inner">
+        <div class="diet-form">
+          <div>
+            <label>Food Item</label>
+            <input type="text" id="dietFood" placeholder="e.g., Chicken Salad">
+          </div>
+          <div>
+            <label>Calories</label>
+            <input type="number" id="dietCalories" placeholder="e.g., 250">
+          </div>
+          <button id="addDietBtn">Add Diet</button>
+        </div>
+      </div>
+      <div class="card-inner" style="margin-top:12px;">
+        <div class="table-wrapper">
+          <table id="dietTable">
+            <thead>
+              <tr><th>Date</th><th>Food</th><th>Calories</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/client/js/main.js" type="module"></script>
+  <script>
+    // Fallback toggler for mobile nav (guards against module caching issues)
+    (function(){
+      const btn = document.getElementById('menuToggle');
+      const menu = document.getElementById('navLinks');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menu.classList.toggle('show');
+      });
+      document.addEventListener('click', function(e){
+        if (!menu.contains(e.target) && !btn.contains(e.target)){
+          menu.classList.remove('show');
+        }
+      });
+    })();
+  </script>
+  <script src="/client/js/gym2.js" type="module"></script>
+</body>
+</html>

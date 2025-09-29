@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking Mates - Signup</title>
+  <link rel="stylesheet" href="/client/css/login.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container" id="signupContainer">
+    <h2>Create Account</h2>
+    <p>Join Cooking Mates</p>
+
+    <div class="input-group">
+      <input type="email" id="signupEmail" placeholder="Email" />
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="signupUsername" placeholder="Username" />
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="signupPassword" placeholder="Password" />
+      <span class="password-toggle" onclick="togglePassword('signupPassword')">
+        <i class="fa fa-eye" id="signupPasswordToggle"></i>
+      </span>
+    </div>
+
+    <button id="signupBtn" type="button" onclick="handleSignup()">Create Account</button>
+    <p class="error" id="signupErrorMsg"></p>
+
+    <p class="signup">Already have an account? <a href="/client/login.html">Login</a></p>
+  </div>
+
+  <div class="container success-slide" id="successSignupContainer" style="display: none;">
+    <h2>Account Created ✅</h2>
+    <p>Redirecting to login...</p>
+  </div>
+
+  <script type="module" src="/client/js/loginsignup.js"></script>
+</body>
+</html>

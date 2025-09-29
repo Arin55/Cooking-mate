@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calorie Tracker - Cooking Mates</title>
+  <link href="/client/css/style.css" rel="stylesheet"/>
+  <link href="/client/css/styles.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color:#1a1a1a; color:white; }
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background:#111; flex-wrap:wrap; border-bottom:1px solid #444; position:sticky; top:0; z-index:2001; }
+    .logo { font-size:24px; font-weight:bold; color:#ff9800; }
+    .menu { display:flex; gap:20px; }
+    .menu a { text-decoration:none; color:white; font-weight:500; transition: color .3s ease; }
+    .menu a:hover { color:#ff9800; }
+    .menu-icon { display:none; font-size:24px; color:white; cursor:pointer; background:transparent; border:none; outline:none; z-index:2002; pointer-events:auto; -webkit-tap-highlight-color: transparent; }
+    .menu-icon:focus, .menu-icon:active { background: transparent !important; outline: none !important; box-shadow: none !important; color: #fff !important; }
+    .menu-icon i { pointer-events:none; }
+    .container { max-width:900px; margin:2rem auto; background:#2a2a2a; padding:2rem; border-radius:10px; box-shadow:0 0 10px #111; }
+    h2 { color:#ff9800; margin-bottom:1rem; }
+    form { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:1rem; margin-bottom:2rem; }
+    input, textarea, button { padding:.5rem; border:none; border-radius:5px; }
+    input, textarea { background:#1a1a1a; color:white; border:1px solid #444; }
+    button { background:#ff9800; color:white; cursor:pointer; font-weight:bold; border:none; }
+    button:hover { background:#e68a00; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:.75rem; border-bottom:1px solid #444; text-align:left; word-break:break-word; }
+    th { color:#ff9800; background:#1a1a1a; }
+    .delete-btn { background:red; border:none; padding:5px 10px; border-radius:5px; color:white; cursor:pointer; }
+    .total { margin-top:1rem; font-weight:bold; font-size:1.2rem; color:#ff9800; }
+    /* Enhanced Responsive Design */
+    @media (max-width: 1200px) {
+      .container { max-width: 100%; padding: 1.5rem; }
+    }
+    
+    @media (max-width: 992px) {
+      .navbar { padding: 16px 24px; }
+      .container { padding: 1.25rem; }
+      form { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; }
+    }
+    
+    @media (max-width: 768px) {
+      .navbar { 
+        padding: 12px 20px; 
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .logo { font-size: 22px; }
+      .menu { 
+        display: none; 
+        flex-direction: column; 
+        background-color: #222; 
+        position: absolute; 
+        top: 70px; 
+        right: 20px; 
+        padding: 16px; 
+        border-radius: 12px; 
+        width: 200px; 
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      }
+      .menu.show { display: flex; }
+      .menu-icon { display: block; }
+      .menu a { 
+        padding: 8px 0; 
+        border-bottom: 1px solid #333;
+        text-align: center;
+      }
+      .menu a:last-child { border-bottom: none; }
+      
+      .container { 
+        margin: 1rem auto; 
+        padding: 1rem; 
+        border-radius: 8px; 
+      }
+      form { 
+        grid-template-columns: 1fr; 
+        gap: 0.75rem; 
+        margin-bottom: 1.5rem; 
+      }
+      h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+      input, textarea, button { 
+        padding: 0.75rem; 
+        font-size: 0.9rem; 
+      }
+      table { font-size: 0.9rem; }
+      th, td { padding: 0.5rem; }
+    }
+    
+    @media (max-width: 480px) {
+      .navbar { 
+        padding: 10px 16px; 
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center;
+      }
+      .menu { 
+        top: 60px; 
+        right: 16px;
+        width: 180px; 
+        padding: 12px;
+      }
+      .logo { font-size: 20px; }
+      
+      .container { 
+        margin: 0.75rem auto; 
+        padding: 0.75rem; 
+        border-radius: 6px; 
+      }
+      h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+      form { gap: 0.5rem; margin-bottom: 1rem; }
+      input, textarea, button { 
+        padding: 0.5rem; 
+        font-size: 0.85rem; 
+        border-radius: 4px; 
+      }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.4rem; }
+      .total { font-size: 1rem; margin-top: 0.75rem; }
+    }
+    
+    @media (max-width: 360px) {
+      .navbar { padding: 8px 12px; }
+      .logo { font-size: 18px; }
+      .menu { 
+        width: 160px; 
+        right: 12px;
+      }
+      .container { padding: 0.5rem; }
+      h2 { font-size: 1.2rem; }
+      input, textarea, button { 
+        font-size: 0.8rem; 
+        padding: 0.4rem; 
+      }
+      table { font-size: 0.75rem; }
+      th, td { padding: 0.3rem; }
+    }
+    
+    /* Enhanced table responsiveness */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr { 
+        display: block; 
+        width: 100%; 
+      }
+      thead tr { display: none; }
+      tbody tr { 
+        margin-bottom: 15px; 
+        background: #1a1a1a; 
+        padding: 10px; 
+        border-radius: 8px; 
+        border: 1px solid #333;
+      }
+      td { 
+        display: flex; 
+        justify-content: space-between; 
+        padding: 8px 5px; 
+        border: none; 
+        border-bottom: 1px solid #333; 
+        align-items: center;
+      }
+      td:last-child { border-bottom: none; }
+      td::before { 
+        content: attr(data-label); 
+        font-weight: bold; 
+        color: #ff9800; 
+        margin-right: 10px;
+        min-width: 80px;
+      }
+      .delete-btn { 
+        margin-left: auto; 
+        padding: 4px 8px; 
+        font-size: 0.75rem; 
+      }
+    }
+
+    /* Calories-only: re-enable mobile hamburger menu (overrides global non-responsive rules) */
+    @media (max-width: 768px) {
+      .navbar .menu { 
+        display: none !important; 
+        position: absolute !important; 
+        top: 64px; right: 16px; 
+        background: #222 !important; 
+        border: 1px solid #333 !important; 
+        width: 220px !important; 
+        padding: 12px !important; 
+        border-radius: 12px; 
+        flex-direction: column; 
+        box-shadow: 0 12px 28px rgba(0,0,0,.35);
+        z-index: 1000;
+      }
+      .navbar .menu.show { display: flex !important; }
+      .navbar .menu a { padding: 10px 8px; border-bottom: 1px solid #333; text-align: left; }
+      .navbar .menu a:last-child { border-bottom: none; }
+      .navbar .menu-icon { display: inline-block !important; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Cooking Mates</div>
+    <button class="menu-icon" id="menuToggle" type="button" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
+    <div class="menu" id="navLinks">
+      <a href="/client/index.html">Home</a>
+      <a href="/client/recipes.html">Recipes</a>
+      <a href="/client/calories.html" class="active">Calorie Tracker</a>
+      <a href="/client/gym.html">Gym Tracker</a>
+      <a href="/login">Login</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Add Food Entry</h2>
+    <form id="calorieForm">
+      <input type="text" id="foodName" placeholder="Food Name" required />
+      <input type="number" id="calories" placeholder="Calories" required />
+      <textarea id="note" placeholder="Notes"></textarea>
+      <button type="submit">Add Entry</button>
+    </form>
+
+    <h2>Entries</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Food</th>
+          <th>Calories</th>
+          <th>Notes</th>
+          <th>Date/Time</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="entriesTable"></tbody>
+    </table>
+
+    <div class="total">Total Calories: <span id="totalCalories">0</span></div>
+  </div>
+
+  <script src="/client/js/main.js" type="module"></script>
+  <script>
+    // Fallback toggler for mobile nav (guards against any module load/caching issues)
+    (function(){
+      const btn = document.getElementById('menuToggle');
+      const menu = document.getElementById('navLinks');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        menu.classList.toggle('show');
+      });
+      document.addEventListener('click', function(e){
+        if (!menu.contains(e.target) && !btn.contains(e.target)){
+          menu.classList.remove('show');
+        }
+      });
+    })();
+  </script>
+  <script src="/client/js/calories2.js" type="module"></script>
+</body>
+</html>

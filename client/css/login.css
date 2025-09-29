@@ -1,0 +1,88 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1a1a1a;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.container {
+  background: #222;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+.input-group {
+  margin: 1rem 0;
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 12px 44px 12px 12px;
+  border: 1px solid #3a3a3a;
+  border-radius: 10px;
+  background: #0f0f0f;
+  color: #fff;
+  outline: none;
+  box-sizing: border-box;
+}
+input::placeholder{ color:#9a9a9a; }
+input:focus { border-color: #ff9800; box-shadow: 0 0 0 3px rgba(255,152,0,.25); }
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bbb;
+  font-size: 16px;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.password-toggle:hover { color: #ff9800; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 1rem;
+  background: #ff9800;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.02s ease;
+}
+button:hover { filter: brightness(1.05); }
+button:active { transform: translateY(1px); }
+button:focus-visible { outline: 3px solid rgba(255,152,0,.5); outline-offset: 2px; }
+
+.forgot, .signup { margin-top: 1rem; font-size: 0.95rem; color: #bbb; }
+.forgot a, .signup a { color: #ffb74d; text-decoration: none; font-weight: 600; transition: color 0.2s ease, text-decoration 0.2s ease; }
+.forgot a:hover, .signup a:hover { color: #ff9800; text-decoration: underline; }
+
+.error { color: #ff7b7b; font-size: 0.9rem; }
+
+.success-slide { display: none; animation: slideUp 1s ease forwards; }
+@keyframes slideUp { 0% { transform: translateY(100%); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+.top-slider { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background-color: #27ae60; color: white; padding: 15px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 999; font-size: 16px; opacity: 0; transition: all 0.5s ease; }
+.top-slider.show { top: 30px; opacity: 1; }
+
+@media (max-width: 480px) {
+  .container { padding: 1.5rem; border-radius: 14px; }
+  input, button { font-size: 1rem; padding: 12px; }
+  .top-slider { font-size: 14px; padding: 12px 20px; }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cooking Mates - Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { margin:0; font-family:'Segoe UI',sans-serif; background-color:#0d1117; color:#fff; min-height:100vh; }
+    /* Navbar (responsive, consistent) */
+    .navbar { display:flex; justify-content:space-between; align-items:center; padding:16px 24px; background:#111; border-bottom:1px solid #333; position:sticky; top:0; z-index:10; }
+    .logo { font-size:22px; font-weight:bold; color:#fbbf24; }
+    .menu { display:flex; gap:16px; }
+    .menu a { color:#fff; text-decoration:none; font-weight:500; }
+    .menu a:hover{ color:#fbbf24; }
+    .menu-icon{ display:none; font-size:22px; color:#fff; background:none; border:none; cursor:pointer; }
+    @media(max-width:768px){
+      .menu{ display:none; position:absolute; top:56px; right:16px; background:#161b22; border:1px solid #30363d; border-radius:12px; padding:12px; flex-direction:column; width:200px; box-shadow:0 8px 24px rgba(0,0,0,.35); }
+      .menu.show{ display:flex; }
+      .menu a{ padding:8px 0; border-bottom:1px solid #2a2f35; }
+      .menu a:last-child{ border-bottom:none; }
+      .menu-icon{ display:block; }
+    }
+    /* Page layout */
+    .profile-page { display:flex; justify-content:center; align-items:center; padding:24px; }
+    .profile-box { background-color:#161b22; padding:30px 20px; border-radius:25px; width:100%; max-width:450px; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+    .profile-box h1 { margin-bottom:20px; color:#fbbf24; font-size:1.8rem; }
+    .profile-img-container { position:relative; margin:0 auto 20px; width:110px; height:110px; }
+    .profile-img { width:110px; height:110px; border-radius:50%; background-color:#ccc; object-fit:cover; cursor:pointer; transition:.3s; }
+    .profile-img:hover { opacity:.8; }
+    .profile-pic-upload { position:absolute; bottom:0; right:0; background:#fbbf24; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:#000; border:2px solid #161b22; }
+    #profilePicInput { display:none; }
+    .profile-info { margin:15px 0; text-align:left; }
+    .profile-field { margin:12px 0; padding:12px; background:#21262d; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; transition:background .2s; }
+    .profile-field:hover { background:#30363d; }
+    .label { font-weight:500; color:#c9d1d9; font-size:.9rem; }
+    .value { font-weight:600; font-size:.95rem; }
+    .edit-icon { color:#fbbf24; font-size:16px; margin-left:8px; }
+    .dashboard-btn { background:#3b82f6; color:#fff; padding:12px; border-radius:8px; font-weight:bold; text-align:center; cursor:pointer; margin-top:15px; transition:background .3s; }
+    .dashboard-btn:hover{ background:#2563eb; }
+    .logout-btn { background:#f87171; color:#fff; padding:12px; border-radius:8px; font-weight:bold; text-align:center; cursor:pointer; margin-top:15px; transition:background .3s; }
+    .logout-btn:hover{ background:#ef4444; }
+    .edit-form { background:#21262d; padding:15px; border-radius:8px; margin:10px 0; display:none; }
+    .edit-form input { width:100%; padding:10px; margin:8px 0; border:none; border-radius:6px; background:#30363d; color:#fff; font-size:.95rem; }
+    .edit-form input:focus { outline:none; border:2px solid #fbbf24; }
+    .edit-form button { padding:8px 16px; border:none; border-radius:6px; font-weight:600; cursor:pointer; margin-right:5px; }
+    .edit-form button.save{ background:#10b981; color:#fff; }
+    .edit-form button.save:hover{ background:#059669; }
+    .edit-form button.cancel{ background:#6b7280; color:#fff; }
+    .edit-form button.cancel:hover{ background:#4b5563; }
+    .success-msg{ color:#10b981; font-size:.85rem; margin-top:8px; text-align:center; }
+    .error-msg{ color:#f87171; font-size:.85rem; margin-top:8px; text-align:center; }
+    @media (max-width:480px){ .profile-page{ padding:16px; } .profile-box{ padding:20px 15px; border-radius:20px;} .profile-box h1{ font-size:1.5rem;} .profile-field{ padding:10px;} .value{ font-size:.9rem;} }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">Cooking Mates</div>
+    <button class="menu-icon" id="menuToggle" aria-label="Open Menu"><i class="fas fa-bars"></i></button>
+    <div class="menu" id="navLinks">
+      <a href="/client/index.html">Home</a>
+      <a href="/client/recipes.html">Recipes</a>
+      <a href="/client/calories.html">Calorie Tracker</a>
+      <a href="/client/gym.html">Gym Tracker</a>
+      <a href="/login">Login</a>
+    </div>
+  </nav>
+
+  <div class="profile-page">
+    <div class="profile-box">
+    <h1>Cooking Mates</h1>
+    <div class="profile-img-container">
+      <img id="profilePic" class="profile-img" src="https://via.placeholder.com/120x120/ccc/666?text=Profile" alt="Profile Picture">
+      <div class="profile-pic-upload" id="picUpload"><i class="fas fa-camera"></i></div>
+      <input type="file" id="profilePicInput" accept="image/*">
+    </div>
+    <div class="profile-info">
+      <div class="profile-field" id="editName">
+        <div>
+          <div class="label">Full Name</div>
+          <div class="value" id="name">Loading...</div>
+        </div>
+        <i class="fas fa-edit edit-icon"></i>
+      </div>
+      <div class="profile-field" id="editUsername">
+        <div>
+          <div class="label">Username</div>
+          <div class="value" id="username">Loading...</div>
+        </div>
+        <i class="fas fa-edit edit-icon"></i>
+      </div>
+      <div class="profile-field" id="editEmail">
+        <div>
+          <div class="label">Email</div>
+          <div class="value" id="email">Loading...</div>
+        </div>
+      </div>
+      <div class="profile-field" id="editPhone">
+        <div>
+          <div class="label">Phone Number</div>
+          <div class="value" id="phone">Loading...</div>
+        </div>
+        <i class="fas fa-edit edit-icon"></i>
+      </div>
+    </div>
+    <div class="logout-btn" id="logout">Logout</div>
+    <div id="nameEditForm" class="edit-form">
+      <input type="text" id="nameEditInput" placeholder="Enter your full name">
+      <button class="save" id="saveName">Save</button>
+      <button class="cancel" data-target="name">Cancel</button>
+    </div>
+    <div id="usernameEditForm" class="edit-form">
+      <input type="text" id="usernameEditInput" placeholder="Enter new username">
+      <button class="save" id="saveUsername">Save</button>
+      <button class="cancel" data-target="username">Cancel</button>
+    </div>
+    <div id="message"></div>
+  </div>
+</div>
+<script type="module" src="/client/js/main.js"></script>
+<script type="module" src="/client/js/profile2.js"></script>
+</body>
+</html>
