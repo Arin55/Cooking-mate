@@ -4,6 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Cooking Mates - Recipes</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='26' width='48' height='24' rx='6' fill='%23ff9800'/%3E%3Crect x='14' y='18' width='36' height='6' rx='3' fill='%23ff9800'/%3E%3Cpath d='M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' fill='none' opacity='.85'/%3E%3C/svg%3E" />
   <link href="/client/css/style.css" rel="stylesheet"/>
   <link href="/client/css/styles.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -12,6 +13,9 @@
   <style>
     body { background: #181c22; color: #fff; }
     .recipe-search-bar{display:flex;justify-content:center;margin:40px 0 30px}
+    /* Brand logo styling */
+    .brand{display:inline-flex;align-items:center;gap:10px;color:#ff9800;text-decoration:none}
+    .brand img, .brand svg{width:28px;height:28px;display:block;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(255,152,0,.25))}
     .recipe-search-bar input{padding:12px 18px;border-radius:8px 0 0 8px;border:none;outline:none;font-size:1.1rem;width:320px;background:#23272e;color:#fff;border:1px solid #333}
     .recipe-search-bar button{padding:12px 28px;border-radius:0 8px 8px 0;border:none;background:#ff9800;color:#fff;font-size:1.1rem;font-weight:600;cursor:pointer;transition:background .2s;border:1px solid #ff9800}
     .recipe-search-bar button:hover{background:#ffa726}
@@ -176,7 +180,14 @@
 <body>
   <!-- Dark Navbar -->
   <nav class="navbar">
-    <div class="logo">Cooking Mates</div>
+    <a class="brand" href="/client/index.html" aria-label="Cooking Mates home">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="8" y="26" width="48" height="24" rx="6" fill="#ff9800"/>
+        <rect x="14" y="18" width="36" height="6" rx="3" fill="#ff9800"/>
+        <path d="M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+      </svg>
+      <span>Cooking Mates</span>
+    </a>
     <button class="menu-icon" id="menuToggle" aria-label="Open Menu">
       <i class="fa-solid fa-bars"></i>
     </button>

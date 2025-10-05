@@ -25,6 +25,9 @@
     .logo { font-size: 26px; font-weight: bold; color: #ff9800; }
     .menu { display: flex; gap: 25px; }
     .menu a { text-decoration: none; color: white; font-weight: 500; transition: 0.3s; }
+    /* Brand logo styling */
+    .brand{display:inline-flex;align-items:center;gap:10px;color:#ff9800;text-decoration:none}
+    .brand img, .brand svg{width:28px;height:28px;display:block;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(255,152,0,.25))}
     .menu a:hover { color: #ff9800; }
     .menu-icon { display: none; font-size: 28px; color: white; cursor: pointer; background: none; border: none; -webkit-tap-highlight-color: transparent; z-index:2002; pointer-events:auto; }
     .menu-icon:focus, .menu-icon:active { background: transparent !important; outline: none !important; box-shadow: none !important; color:#fff !important; }
@@ -328,7 +331,14 @@
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo">Cooking Mates</div>
+    <a class="brand" href="/client/index.html" aria-label="Cooking Mates home">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="8" y="26" width="48" height="24" rx="6" fill="#ff9800"/>
+        <rect x="14" y="18" width="36" height="6" rx="3" fill="#ff9800"/>
+        <path d="M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+      </svg>
+      <span>Cooking Mates</span>
+    </a>
     <button class="menu-icon" id="menuToggle" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
     <div class="menu" id="navLinks">
       <a href="/client/index.html">Home</a>

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cooking Mates - Home</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='8' y='26' width='48' height='24' rx='6' fill='%23ff9800'/%3E%3Crect x='14' y='18' width='36' height='6' rx='3' fill='%23ff9800'/%3E%3Cpath d='M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' fill='none' opacity='.85'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="/client/css/style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="/client/css/styles.css" rel="stylesheet" />
@@ -50,6 +51,59 @@
     .quote { background:#202020; border:1px solid #333; padding:18px; border-radius:12px; font-style:italic; color:#ddd; }
     .cta { text-align:center; padding:60px 20px; }
     .cta .btn { display:inline-block; margin-top:12px; padding:12px 22px; background:#ff9800; color:#000; font-weight:700; border-radius:8px; text-decoration:none; }
+
+    /* Visual polish overrides (non-breaking) */
+    .navbar { position: sticky; top: 0; z-index: 100; backdrop-filter: saturate(120%) blur(6px); transition: box-shadow .25s ease; }
+    .navbar.scrolled { box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+    .menu a { position: relative; transition: color .25s ease; }
+    .menu a::after { content:""; position:absolute; left:0; bottom:-6px; height:2px; width:100%; background:#ff9800; transform:scaleX(0); transform-origin:left; transition:transform .25s ease; }
+    .menu a:hover::after { transform:scaleX(1); }
+    .menu-icon { display:none; background:transparent; border:1px solid #303030; color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer; }
+
+    .hero { position: relative; padding: 120px 20px; overflow: hidden; }
+    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.55)); pointer-events:none; }
+    .hero > * { position: relative; z-index: 1; }
+    .hero button { padding:12px 28px; border-radius:8px; box-shadow:0 6px 18px rgba(255,152,0,.25); transition:transform .2s ease, box-shadow .2s ease; }
+    .hero button:hover { transform:translateY(-2px); box-shadow:0 10px 22px rgba(255,152,0,.35); }
+
+    .card { border:1px solid #333; border-radius:12px; box-shadow:0 8px 22px rgba(0,0,0,.35); transition:transform .18s ease, box-shadow .18s ease; }
+    .card:hover { transform:translateY(-6px); box-shadow:0 14px 28px rgba(0,0,0,.45); }
+    .feature { box-shadow:0 6px 20px rgba(0,0,0,.25); transition:transform .18s ease, box-shadow .18s ease; }
+    .feature:hover { transform:translateY(-6px); box-shadow:0 12px 26px rgba(0,0,0,.35); }
+    .step { box-shadow:0 6px 18px rgba(0,0,0,.2); transition:transform .18s ease, box-shadow .18s ease; }
+    .step:hover { transform:translateY(-4px); box-shadow:0 10px 24px rgba(0,0,0,.28); }
+    .metric { box-shadow:0 6px 18px rgba(0,0,0,.2); transition:transform .18s ease, box-shadow .18s ease; }
+    .metric:hover { transform:translateY(-4px); box-shadow:0 10px 24px rgba(0,0,0,.28); }
+    .quote { box-shadow:0 6px 18px rgba(0,0,0,.2); }
+    .footer { padding:24px; border-top:1px solid #2a2a2a; }
+    .cta .btn { box-shadow:0 8px 20px rgba(255,152,0,.25); transition:transform .2s ease, box-shadow .2s ease; }
+    .cta .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(255,152,0,.35); }
+
+    html { scroll-behavior: smooth; }
+    .reveal { opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease; }
+    .reveal.in-view { opacity:1; transform:translateY(0); }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+    /* Brand logo styling */
+    .brand { display:inline-flex; align-items:center; gap:10px; color:#ff9800; text-decoration:none; }
+    .brand svg, .brand img { width:28px; height:28px; display:block; filter: drop-shadow(0 2px 6px rgba(255,152,0,.25)); transition: transform .25s ease; object-fit: contain; }
+    .brand span { color:#ff9800; font-weight:700; letter-spacing:.3px; }
+    .brand:hover svg { transform: rotate(-6deg) scale(1.05); }
+
+    /* Body reveal to avoid flash behind splash */
+    body.initial-hidden { opacity: 0; }
+    body.revealed { opacity: 1; transition: opacity .4s ease; }
+
+    /* Splash intro */
+    #splash { position:fixed; inset:0; background:#111; display:flex; align-items:center; justify-content:center; z-index:9999; overflow:hidden; }
+    #splash .logo-mark { display:flex; align-items:center; gap:12px; transform:translate(-50%, -50%); position:absolute; left:50%; top:50%; }
+    #splash .logo-mark svg { width:64px; height:64px; }
+    #splash .logo-mark span { font-size:24px; font-weight:800; color:#ff9800; }
+    #splash.animate .logo-mark { animation: logo-to-corner 1.1s cubic-bezier(.22,.61,.36,1) forwards; }
+    #splash.fade-out { animation: splash-fade .4s ease forwards; }
+    @keyframes logo-pop { from { transform:translate(-50%, -50%) scale(.9); opacity:.6; } to { transform:translate(-50%, -50%) scale(1); opacity:1; } }
+    @keyframes logo-to-corner { 0% { transform:translate(-50%, -50%) scale(1); } 70% { transform:translate(calc(-50% + 44vw), calc(-50% + 44vh)) scale(.45); } 100% { transform:translate(calc(-50% + 48vw), calc(-50% + 48vh)) scale(.4); } }
+    @keyframes splash-fade { to { opacity:0; visibility:hidden; } }
 
     /* Responsive tweaks */
     @media (max-width: 1024px) {
@@ -104,11 +158,30 @@
   <script src="/client/js/main.js" type="module"></script>
   
 </head>
-<body>
+<body class="initial-hidden">
 
   <!-- Navigation Bar -->
+  <!-- Splash Intro -->
+  <div id="splash" aria-hidden="true">
+    <div class="logo-mark" style="animation: logo-pop .5s ease both;">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false" style="width:64px;height:64px;display:block">
+        <rect x="8" y="26" width="48" height="24" rx="6" fill="#ff9800"/>
+        <rect x="14" y="18" width="36" height="6" rx="3" fill="#ff9800"/>
+        <path d="M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+      </svg>
+      <span>Cooking Mates</span>
+    </div>
+  </div>
+
   <nav class="navbar">
-    <div class="logo">Cooking Mates</div>
+    <a class="brand" href="/client/index.html" aria-label="Cooking Mates home">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="8" y="26" width="48" height="24" rx="6" fill="#ff9800"/>
+        <rect x="14" y="18" width="36" height="6" rx="3" fill="#ff9800"/>
+        <path d="M20 14c0-3 4-5 6-5M32 12c0-3 4-5 6-5" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.85"/>
+      </svg>
+      <span>Cooking Mates</span>
+    </a>
     <button class="menu-icon" id="menuToggle" aria-label="Open Menu"><i class="fa-solid fa-bars"></i></button>
     <div class="menu" id="navLinks">
       <a href="/client/index.html">Home</a>
@@ -120,14 +193,14 @@
   </nav>
 
   <!-- Hero Section -->
-  <header class="hero">
+  <header class="hero reveal" data-reveal>
     <h1>Welcome to Cooking Mates</h1>
     <p>Your Personal Recipe & Diet Partner</p>
     <a href="/client/recipes.html"><button>Explore Recipes</button></a>
   </header>
 
   <!-- Featured Section -->
-  <section class="features">
+  <section class="features reveal" data-reveal>
     <h2>Featured Recipes</h2>
     <div class="card-container" id="popularRecipes">
       <!-- populated from API -->
@@ -135,14 +208,14 @@
   </section>
 
   <!-- Info Section -->
-  <section class="info">
+  <section class="info reveal" data-reveal>
     <h2>Track Calories & Gym Diet</h2>
     <p>Get calorie insights and plan your gym diet smartly.</p>
     <a href="/client/calories.html"><button>Start Tracking</button></a>
   </section>
 
   <!-- About Section -->
-  <section class="section" id="about">
+  <section class="section reveal" id="about" data-reveal>
     <h2>About Cooking Mates</h2>
     <p class="lead">Cooking Mates helps you discover tasty, balanced recipes, log workouts and calories, and keep your nutrition organized — all in one clean, simple dashboard.</p>
     <div class="grid">
@@ -162,7 +235,7 @@
   </section>
 
   <!-- How It Works -->
-  <section class="section" id="how">
+  <section class="section reveal" id="how" data-reveal>
     <h2>How It Works</h2>
     <div class="grid steps">
       <div class="step"><strong>Create</strong> your account and set a username.</div>
@@ -173,7 +246,7 @@
   </section>
 
   <!-- Quick Metrics -->
-  <section class="section" id="metrics">
+  <section class="section reveal" id="metrics" data-reveal>
     <h2>Why People Love It</h2>
     <div class="metrics">
       <div class="metric"><div class="num">1K+</div><div class="lbl">Recipes browsed</div></div>
@@ -184,7 +257,7 @@
   </section>
 
   <!-- Testimonials -->
-  <section class="section" id="testimonials">
+  <section class="section reveal" id="testimonials" data-reveal>
     <h2>What Users Say</h2>
     <div class="testimonials">
       <div class="quote">“Clean, fast, and the recipes are actually doable.” — Priya</div>
@@ -194,7 +267,7 @@
   </section>
 
   <!-- Call To Action -->
-  <section class="cta" id="start">
+  <section class="cta reveal" id="start" data-reveal>
     <h2 style="color:#ff9800">Ready to cook smarter?</h2>
     <p style="color:#ddd">Jump in and explore recipes or sign in to start saving your picks.</p>
     <a class="btn" href="/client/recipes.html">Explore Recipes</a>
@@ -208,6 +281,71 @@
 
   
 
+  <script>
+    // Splash sequence -> animate logo to actual navbar brand position
+    window.addEventListener('load', () => {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const splash = document.getElementById('splash');
+      const logoMark = splash ? splash.querySelector('.logo-mark') : null;
+      const brand = document.querySelector('.navbar .brand');
+      if (!splash || !logoMark || !brand) { document.body.classList.add('revealed'); return; }
+      if (prefersReduced) { splash.remove(); document.body.classList.add('revealed'); return; }
+
+      // Ensure initial state
+      document.body.offsetHeight; // reflow
+
+      // Compute target center of brand icon area
+      const brandRect = brand.getBoundingClientRect();
+      // Aim near left of brand (icon area ~ 28px square)
+      const targetX = brandRect.left + 14; // center of icon
+      const targetY = brandRect.top + Math.min(brandRect.height, 28) / 2;
+
+      // Current center is viewport center (due to translate(-50%, -50%))
+      const vwCenterX = window.innerWidth / 2;
+      const vwCenterY = window.innerHeight / 2;
+
+      // Distance to move from center
+      const dx = targetX - vwCenterX;
+      const dy = targetY - vwCenterY;
+
+      // Scale from splash size (64px) to navbar size (~28px)
+      const scale = 28 / 64;
+
+      // Animate via direct transform
+      logoMark.style.transition = 'transform 1s cubic-bezier(.22,.61,.36,1)';
+      requestAnimationFrame(() => {
+        logoMark.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+      });
+
+      // Fade out splash then remove, reveal body
+      setTimeout(() => { splash.classList.add('fade-out'); }, 1050);
+      setTimeout(() => { splash.remove(); document.body.classList.remove('initial-hidden'); document.body.classList.add('revealed'); }, 1500);
+    });
+
+    // Subtle parallax for hero background
+    document.addEventListener('scroll', () => {
+      const hero = document.querySelector('.hero');
+      const navbar = document.querySelector('.navbar');
+      if (!hero) return;
+      const y = window.scrollY * 0.2;
+      hero.style.backgroundPosition = `center calc(50% + ${y}px)`;
+      if (navbar) {
+        if (window.scrollY > 8) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
+      }
+    }, { passive: true });
+
+    // Reveal-on-scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  </script>
   <script>
     // Load featured recipes into cards
     document.addEventListener('DOMContentLoaded', async () => {

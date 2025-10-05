@@ -1,10 +1,9 @@
 // Basic API helper
-// If site is served from a different port (e.g., 5500), we still want API calls to hit Express on :5000
-let DEFAULT_BASE = `${location.origin.replace(/\/$/, '')}`;
-if (!/:(5000)$/.test(location.origin)) {
-  DEFAULT_BASE = 'http://localhost:5000';
-}
-export const API_BASE = DEFAULT_BASE;
+// In production (Vercel), we want same-origin so rewrites proxy /api -> backend.
+// In local dev (served from a non-5000 port), hit Express on :5000.
+const isLocal = /localhost|127\.0\.0\.1/.test(location.hostname);
+// Use same-origin in production; Vercel routes /api/* to serverless function
+export const API_BASE = isLocal ? 'http://localhost:5000' : '';
 export const tokenKey = 'cookfit_token';
 
 export function getToken(){ return localStorage.getItem(tokenKey) || ''; }
